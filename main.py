@@ -1,5 +1,3 @@
-plotly
-requests
 
 """
 전국 고령화 지도 (Streamlit + Plotly)
