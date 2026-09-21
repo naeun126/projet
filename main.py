@@ -138,15 +138,20 @@ fig = px.choropleth(
     color="구간",
     category_orders={"구간": BIN_LABELS},
     color_discrete_sequence=BIN_COLORS,
-    hover_name="시군구",
-    hover_data={
-        "시도": True,
-        "고령화율": ":.2f",
-        "시군구코드": False,
-        "구간": False,
-    },
-    custom_data=["시군구코드", "시군구", "시도"],
+    custom_data=["시군구코드", "시군구", "시도", "고령화율"],
     labels={"고령화율": "고령화율(%)", "시도": "시도", "구간": "구간"},
+)
+
+# 마우스 오버 시 시군구 이름 · 시도 · 고령화율(%)이 보이도록 직접 지정한다.
+# (hover_data를 함께 쓰면 customdata 배열 길이가 달라져 클릭 처리에서 오류가 나므로
+#  custom_data만 사용하고, 툴팁 내용은 hovertemplate으로 직접 만든다.)
+fig.update_traces(
+    hovertemplate=(
+        "<b>%{customdata[1]}</b><br>"
+        "시도: %{customdata[2]}<br>"
+        "고령화율: %{customdata[3]:.2f}%"
+        "<extra></extra>"
+    )
 )
 
 # 배경 지도 타일(바다, 육지, 국경선 등) 없이 경계선만 보이도록 설정
@@ -182,7 +187,7 @@ if not selected_points:
 else:
     # 여러 지역을 선택해도 첫 번째로 클릭한 지역만 보여준다.
     point = selected_points[0]
-    selected_code, selected_sigungu, selected_sido = point["customdata"]
+    selected_code, selected_sigungu, selected_sido, _ = point["customdata"]
 
     st.subheader(f"{selected_sido} {selected_sigungu} 상세 보기")
 
